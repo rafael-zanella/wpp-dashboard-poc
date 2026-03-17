@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Smartphone, RefreshCw, QrCode, CheckCircle2 } from 'lucide-react';
-import './WhatsAppConnector.css';
+import { Card, CardContent, Box, Typography, Button } from '@mui/material';
 
 export const WhatsAppConnector: React.FC = () => {
   const [status, setStatus] = useState<'disconnected' | 'connecting' | 'connected'>('disconnected');
@@ -192,61 +192,91 @@ export const WhatsAppConnector: React.FC = () => {
   };
 
   return (
-    <div className="glass-panel connector-card">
-      <div className="card-header">
-        <div className="card-title">
-          <Smartphone className="icon-green" size={24} />
-          <h3>Evolution API WhatsApp</h3>
-        </div>
-        <div className={`status-badge ${status}`}>
+    <Card sx={{
+      p: 0,
+      bgcolor: 'background.paper',
+      backdropFilter: 'blur(12px)',
+      boxShadow: '0 8px 32px 0 rgba(0,0,0,0.3)',
+      border: '1px solid',
+      borderColor: 'rgba(255, 255, 255, 0.08)',
+      borderRadius: 4,
+      display: 'flex', flexDirection: 'column'
+    }}>
+      <Box sx={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        p: 3,
+        borderBottom: '1px solid rgba(255, 255, 255, 0.05)'
+      }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+          <Smartphone size={24} color="#10b981" />
+          <Typography variant="h6" fontWeight="600" m={0}>Evolution API WhatsApp</Typography>
+        </Box>
+        <Box sx={{
+          px: 1.5, py: 0.5, borderRadius: '12px', fontSize: '0.8rem', fontWeight: 600,
+          bgcolor: status === 'connected' ? 'rgba(16, 185, 129, 0.15)' : status === 'connecting' ? 'rgba(245, 158, 11, 0.15)' : 'rgba(255, 255, 255, 0.1)',
+          color: status === 'connected' ? '#10b981' : status === 'connecting' ? '#f59e0b' : 'text.secondary'
+        }}>
           {status === 'connected' ? 'Connected' : status === 'connecting' ? 'Connecting...' : 'Disconnected'}
-        </div>
-      </div>
+        </Box>
+      </Box>
 
-      <div className="card-body">
+      <CardContent sx={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', p: 4 }}>
         {status === 'disconnected' && (
-          <div className="qr-container placeholder">
-            <QrCode size={120} className="qr-icon" />
-            <p>Ready to connect instance</p>
-            <button className="btn-primary" onClick={handleConnect}>
+          <Box sx={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+            <Box sx={{ p: 3, borderRadius: '50%', bgcolor: 'rgba(255, 255, 255, 0.03)' }}>
+              <QrCode size={64} color="var(--text-secondary)" />
+            </Box>
+            <Typography color="text.secondary">Ready to connect instance</Typography>
+            <Button variant="contained" color="primary" onClick={handleConnect} sx={{ mt: 2, borderRadius: 2, textTransform: 'none', px: 4, py: 1.5 }}>
               Generate QR Code
-            </button>
-          </div>
+            </Button>
+          </Box>
         )}
 
         {status === 'connecting' && (
-          <div className="qr-container loading">
+          <Box sx={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
             {qrCodeBase64 ? (
-              <div className="real-qr-code">
-                <img src={qrCodeBase64} alt="Evolution API WhatsApp QR Code" style={{ width: 200, height: 200, borderRadius: 12, border: '4px solid white', backgroundColor: 'white' }} />
-              </div>
+              <Box>
+                <img src={qrCodeBase64} alt="WhatsApp QR Code" style={{ width: 220, height: 220, borderRadius: 12, border: '4px solid white', backgroundColor: 'white', padding: 8 }} />
+              </Box>
             ) : (
-              <div className="mock-qr-code">
-                <div className="qr-corner top-left"></div>
-                <div className="qr-corner top-right"></div>
-                <div className="qr-corner bottom-left"></div>
-                <RefreshCw className="spinner" size={40} />
-              </div>
+              <Box sx={{
+                width: 200, height: 200, border: '2px dashed rgba(255, 255, 255, 0.2)',
+                borderRadius: 3, display: 'flex', alignItems: 'center', justifyContent: 'center'
+              }}>
+                <RefreshCw size={40} className="spinner" color="var(--text-secondary)" />
+              </Box>
             )}
-            <p>{qrCodeBase64 ? 'Scan this code in WhatsApp' : 'Generating QR Code...'}</p>
-          </div>
+            <Typography color="text.secondary">
+              {qrCodeBase64 ? 'Scan this code in WhatsApp' : 'Generating QR Code...'}
+            </Typography>
+          </Box>
         )}
 
         {status === 'connected' && (
-          <div className="success-state">
-            {profilePicUrl ? (
-              <img src={profilePicUrl} alt="Profile" className="profile-pic" style={{ width: 80, height: 80, borderRadius: '50%', marginBottom: 16, border: '2px solid rgba(255,255,255,0.1)' }} />
-            ) : (
-              <CheckCircle2 size={64} className="success-icon icon-green" />
-            )}
-            <h4>{profileName || 'Instance Connected'}</h4>
-            <p>Session: {instanceName}</p>
-            <button className="btn-secondary" onClick={handleDisconnect}>
+          <Box sx={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+            <Box sx={{
+              width: 100, height: 100, display: 'flex', alignItems: 'center', justifyContent: 'center',
+              borderRadius: '50%', background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.2), transparent)'
+            }}>
+              {profilePicUrl ? (
+                <img src={profilePicUrl} alt="Profile" style={{ width: 80, height: 80, borderRadius: '50%', border: '2px solid rgba(255,255,255,0.1)' }} />
+              ) : (
+                <CheckCircle2 size={48} color="#10b981" />
+              )}
+            </Box>
+            <Box>
+              <Typography variant="h5" fontWeight="600">{profileName || 'Instance Connected'}</Typography>
+              <Typography color="text.secondary" variant="body2">Session: {instanceName}</Typography>
+            </Box>
+            <Button variant="outlined" color="inherit" onClick={handleDisconnect} sx={{ mt: 2, borderRadius: 2, textTransform: 'none', borderColor: 'rgba(255,255,255,0.2)' }}>
               Disconnect
-            </button>
-          </div>
+            </Button>
+          </Box>
         )}
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };
