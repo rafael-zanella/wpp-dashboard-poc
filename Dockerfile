@@ -30,7 +30,8 @@ RUN echo "const express = require('express'); \
 const path = require('path'); \
 const { createProxyMiddleware } = require('http-proxy-middleware'); \
 const app = express(); \
-const EVOLUTION_URL = process.env.VITE_EVOLUTION_SERVER_URL || 'http://localhost:8080'; \
+const EVOLUTION_URL = process.env.VITE_EVOLUTION_SERVER_URL || process.env.EVOLUTION_SERVER_URL || 'http://localhost:8080'; \
+const API_KEY = process.env.VITE_EVOLUTION_API_KEY || process.env.EVOLUTION_API_KEY || ''; \
 \
 app.use('/evolution', createProxyMiddleware({ \
   target: EVOLUTION_URL, \
@@ -38,6 +39,9 @@ app.use('/evolution', createProxyMiddleware({ \
   pathRewrite: { '^/evolution': '' }, \
   onProxyReq: (proxyReq, req, res) => { \
       proxyReq.setHeader('Origin', EVOLUTION_URL); \
+      if (API_KEY) { \
+        proxyReq.setHeader('apikey', API_KEY); \
+      } \
   } \
 })); \
 \
