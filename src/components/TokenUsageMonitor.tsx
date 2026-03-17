@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Sparkles, BrainCircuit, Activity, RefreshCw } from 'lucide-react';
-import { Card, CardContent, Box, Typography, LinearProgress, CircularProgress } from '@mui/material';
+import { Sparkles, BrainCircuit, Activity } from 'lucide-react';
+import { Card, CardContent, Box, Typography, CircularProgress } from '@mui/material';
 
 export const TokenUsageMonitor: React.FC = () => {
     const [totalTokens, setTotalTokens] = useState(1000000);
