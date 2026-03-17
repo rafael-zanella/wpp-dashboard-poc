@@ -13,18 +13,46 @@ COPY . .
 # Build the project
 RUN npm run build
 
+# Stage 2: Serve the application with Node.js Express
+FROM node:20-alpine
 
-# Stage 2: Serve the application with Nginx
-FROM nginx:alpine
+WORKDIR /app
 
-# Copy the nginx configuration file
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# We only need the built files and a basic server setup
+COPY --from=build /app/dist ./dist
+COPY package*.json ./
 
-# Copy the built assets from the build stage
-COPY --from=build /app/dist /usr/share/nginx/html
+# Install express and http-proxy-middleware for serving and routing APIs
+RUN npm install express http-proxy-middleware cors
 
-# Expose port 80
+# Create a simple server script inline
+RUN echo "const express = require('express'); \
+const path = require('path'); \
+const { createProxyMiddleware } = require('http-proxy-middleware'); \
+const app = express(); \
+const EVOLUTION_URL = process.env.VITE_EVOLUTION_SERVER_URL || 'http://localhost:8080'; \
+\
+app.use('/evolution', createProxyMiddleware({ \
+  target: EVOLUTION_URL, \
+  changeOrigin: true, \
+  pathRewrite: { '^/evolution': '' }, \
+  onProxyReq: (proxyReq, req, res) => { \
+      proxyReq.setHeader('Origin', EVOLUTION_URL); \
+  } \
+})); \
+\
+app.use(express.static(path.join(__dirname, 'dist'))); \
+\
+app.use((req, res) => { \
+  res.sendFile(path.join(__dirname, 'dist', 'index.html')); \
+}); \
+\
+const PORT = process.env.PORT || 80; \
+app.listen(PORT, () => { \
+  console.log('Server is running on port ' + PORT); \
+  console.log('Proxying /evolution to ' + EVOLUTION_URL); \
+});" > server.cjs
+
 EXPOSE 80
 
-# Start Nginx
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["node", "server.cjs"]
