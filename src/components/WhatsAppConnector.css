@@ -1,0 +1,172 @@
+.connector-card {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    min-height: 380px;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 1rem;
+}
+
+.card-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.icon-green {
+    color: var(--accent-primary);
+}
+
+.status-badge {
+    padding: 0.35rem 0.85rem;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    border: 1px solid;
+}
+
+.status-badge.disconnected {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border-color: rgba(239, 68, 68, 0.2);
+}
+
+.status-badge.connecting {
+    background: rgba(245, 158, 11, 0.1);
+    color: #f59e0b;
+    border-color: rgba(245, 158, 11, 0.2);
+}
+
+.status-badge.connected {
+    background: var(--accent-primary-glow);
+    color: var(--accent-primary);
+    border-color: rgba(16, 185, 129, 0.3);
+}
+
+.card-body {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.qr-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    text-align: center;
+}
+
+.qr-icon {
+    color: var(--text-secondary);
+    opacity: 0.5;
+}
+
+.mock-qr-code {
+    width: 200px;
+    height: 200px;
+    background: #fff;
+    border-radius: 12px;
+    padding: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.qr-corner {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border: 4px solid #000;
+}
+
+.qr-corner.top-left {
+    top: 1rem;
+    left: 1rem;
+    border-right: 0;
+    border-bottom: 0;
+}
+
+.qr-corner.top-right {
+    top: 1rem;
+    right: 1rem;
+    border-left: 0;
+    border-bottom: 0;
+}
+
+.qr-corner.bottom-left {
+    bottom: 1rem;
+    left: 1rem;
+    border-right: 0;
+    border-top: 0;
+}
+
+.spinner {
+    color: var(--bg-primary);
+    animation: spin 1.5s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.btn-primary {
+    background: var(--accent-primary);
+    color: #fff;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    box-shadow: 0 4px 14px var(--accent-primary-glow);
+}
+
+.btn-primary:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+}
+
+.success-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    text-align: center;
+}
+
+.success-state p {
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+}
