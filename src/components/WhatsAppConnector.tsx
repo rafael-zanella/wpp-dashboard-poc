@@ -12,15 +12,11 @@ export const WhatsAppConnector: React.FC = () => {
 
   const instanceName = "Quantum";
 
-  // Function to fetch profile data
   const fetchProfileData = async () => {
-    const serverUrl = import.meta.env.VITE_EVOLUTION_SERVER_URL;
-    const apiKey = import.meta.env.VITE_EVOLUTION_API_KEY;
+    const serverUrl = '/evolution';
 
     try {
-      const res = await fetch(`${serverUrl}/instance/fetchInstances?instanceName=${instanceName}`, {
-        headers: { 'apikey': apiKey }
-      });
+      const res = await fetch(`${serverUrl}/instance/fetchInstances?instanceName=${instanceName}`);
       const data = await res.json();
 
       if (Array.isArray(data) && data.length > 0) {
@@ -38,23 +34,13 @@ export const WhatsAppConnector: React.FC = () => {
     setStatus('connecting');
     setQrCodeBase64(null);
 
-    const serverUrl = import.meta.env.VITE_EVOLUTION_SERVER_URL;
-    const apiKey = import.meta.env.VITE_EVOLUTION_API_KEY;
-
-    if (!serverUrl || !apiKey) {
-      console.error("Evolution variables missing in .env");
-      setStatus('disconnected');
-      return;
-    }
+    const serverUrl = '/evolution';
 
     try {
 
       // Generate / Fetch QR Code
       const qrRes = await fetch(`${serverUrl}/instance/connect/${instanceName}`, {
-        method: 'GET',
-        headers: {
-          'apikey': apiKey
-        }
+        method: 'GET'
       });
 
       const qrData = await qrRes.json();
@@ -79,14 +65,11 @@ export const WhatsAppConnector: React.FC = () => {
     let qrRefreshIntervalId: ReturnType<typeof setInterval>;
 
     if (status === 'connecting') {
-      const serverUrl = import.meta.env.VITE_EVOLUTION_SERVER_URL;
-      const apiKey = import.meta.env.VITE_EVOLUTION_API_KEY;
+      const serverUrl = '/evolution';
 
       const checkState = async () => {
         try {
-          const res = await fetch(`${serverUrl}/instance/fetchInstances?instanceName=${instanceName}`, {
-            headers: { 'apikey': apiKey }
-          });
+          const res = await fetch(`${serverUrl}/instance/fetchInstances?instanceName=${instanceName}`);
           const data = await res.json();
 
           if (Array.isArray(data) && data.length > 0) {
@@ -106,8 +89,7 @@ export const WhatsAppConnector: React.FC = () => {
       const refreshQr = async () => {
         try {
           const qrRes = await fetch(`${serverUrl}/instance/connect/${instanceName}`, {
-            method: 'GET',
-            headers: { 'apikey': apiKey }
+            method: 'GET'
           });
           const qrData = await qrRes.json();
           if (qrData.base64) {
@@ -126,17 +108,12 @@ export const WhatsAppConnector: React.FC = () => {
     };
   }, [status, instanceName]);
 
-  // Initial check on mount
   useEffect(() => {
     const checkInitialState = async () => {
-      const serverUrl = import.meta.env.VITE_EVOLUTION_SERVER_URL;
-      const apiKey = import.meta.env.VITE_EVOLUTION_API_KEY;
-      if (!serverUrl || !apiKey) return;
+      const serverUrl = '/evolution';
 
       try {
-        const res = await fetch(`${serverUrl}/instance/fetchInstances?instanceName=${instanceName}`, {
-          headers: { 'apikey': apiKey }
-        });
+        const res = await fetch(`${serverUrl}/instance/fetchInstances?instanceName=${instanceName}`);
         const data = await res.json();
 
         if (Array.isArray(data) && data.length > 0) {
@@ -155,18 +132,12 @@ export const WhatsAppConnector: React.FC = () => {
   }, []);
 
   const handleDisconnect = async () => {
-    const serverUrl = import.meta.env.VITE_EVOLUTION_SERVER_URL;
-    const apiKey = import.meta.env.VITE_EVOLUTION_API_KEY;
-
-    if (!serverUrl || !apiKey) return;
+    const serverUrl = '/evolution';
 
     try {
       // Disconnect the instance in the backend
       const res = await fetch(`${serverUrl}/instance/logout/${instanceName}`, {
-        method: 'DELETE',
-        headers: {
-          'apikey': apiKey
-        }
+        method: 'DELETE'
       });
       const data = await res.json();
 
